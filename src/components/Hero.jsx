@@ -107,7 +107,7 @@ export default function Hero() {
                 ease: "linear"
               }}
             >
-              <img src="/sa.jpeg" alt="Safvan - MERN Stack Developer" className="w-full h-full object-cover scale-110 group-hover:scale-125 transition-transform duration-700" />
+              <img src="/a.jpeg" alt="Safvan - MERN Stack Developer" className="w-full h-full object-cover scale-110 group-hover:scale-125 transition-transform duration-700" />
             </motion.div>
           </motion.div>
         </motion.div>
