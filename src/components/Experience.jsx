@@ -1,10 +1,13 @@
+'use client';
 import React, { useRef, useState, useEffect } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import { FaGraduationCap, FaBriefcase, FaCodeBranch, FaCircle, FaChevronDown } from 'react-icons/fa';
 
-gsap.registerPlugin(ScrollTrigger);
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 const experiences = [
   {

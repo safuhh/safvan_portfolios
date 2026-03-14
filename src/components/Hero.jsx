@@ -1,117 +1,147 @@
+'use client';
+import React, { useRef, Suspense, useMemo } from 'react';
+import { Canvas, useFrame } from '@react-three/fiber';
+import {
+  Float,
+  PerspectiveCamera,
+  MeshDistortMaterial,
+  Sphere,
+  Environment,
+  Points,
+  PointMaterial,
+  Sparkles
+} from '@react-three/drei';
+import { gsap } from 'gsap';
+import { useGSAP } from '@gsap/react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-scroll';
 
-export default function Hero() {
+function MinimalistBackground() {
+  const meshRef = useRef();
+
+  useFrame((state) => {
+    const time = state.clock.getElapsedTime();
+    if (meshRef.current) {
+      meshRef.current.rotation.x = time * 0.1;
+      meshRef.current.rotation.y = time * 0.15;
+    }
+  });
+
   return (
-    <section id="home" className="min-h-screen flex items-center justify-center relative overflow-hidden pt-20 pb-10">
-      {/* Background Animated Gradient */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/20 rounded-full mix-blend-screen filter blur-[100px] animate-blob pointer-events-none"></div>
-      <div className="absolute top-1/3 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full mix-blend-screen filter blur-[100px] animate-blob animation-delay-2000 pointer-events-none"></div>
-      <div className="absolute bottom-1/4 left-1/3 w-96 h-96 bg-blue-500/20 rounded-full mix-blend-screen filter blur-[100px] animate-blob animation-delay-4000 pointer-events-none"></div>
+    <group>
+      <Float speed={2} rotationIntensity={0.5} floatIntensity={1}>
+        <mesh ref={meshRef}>
+          <icosahedronGeometry args={[4, 0]} />
+          <meshStandardMaterial
+            color="#3b82f6"
+            wireframe
+            transparent
+            opacity={0.1}
+          />
+        </mesh>
+      </Float>
 
-      <div className="max-w-7xl mx-auto px-6 relative z-10 w-full mt-10 md:mt-0 flex flex-col md:flex-row items-center justify-between gap-12">
-        {/* Text Content Block */}
-        <div className="w-full md:w-1/2">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="flex items-center gap-3 mb-6"
-          >
-            <span className="w-12 h-1 bg-primary rounded-full"></span>
-            <span className="text-primary font-medium tracking-wider uppercase text-sm">Hello, I'm</span>
-          </motion.div>
+      <Sparkles count={100} scale={20} size={2} speed={0.5} opacity={0.3} color="#3b82f6" />
+    </group>
+  );
+}
 
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight"
-          >
-            Safvan. <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-400 to-gray-600 block mt-2">
-              MERN Stack Developer
-            </span>
-          </motion.h1>
+export default function Hero() {
+  const containerRef = useRef();
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-gray-400 text-lg md:text-xl mb-10 max-w-xl leading-relaxed"
-          >
-            I build exceptional and accessible digital experiences for the web.
-            Focused on creating scalable, high-performance applications with elegant modern designs.
-          </motion.p>
+  useGSAP(() => {
+    const tl = gsap.timeline();
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="flex flex-wrap gap-5"
-          >
-            <Link
-              to="projects"
-              smooth={true}
-              duration={500}
-              className="btn-primary cursor-pointer border border-transparent"
-            >
-              View Projects
-            </Link>
+    tl.from(".hero-content > *", {
+      y: 50,
+      opacity: 0,
+      stagger: 0.2,
+      duration: 1.2,
+      ease: "power4.out",
+      delay: 0.5
+    });
+
+    gsap.to(".scroll-indicator", {
+      y: 10,
+      repeat: -1,
+      yoyo: true,
+      duration: 1.5,
+      ease: "sine.inOut"
+    });
+  }, { scope: containerRef });
+
+  return (
+    <section
+      ref={containerRef}
+      id="home"
+      className="min-h-screen relative flex items-center justify-center pt-20 overflow-hidden bg-[#020202]"
+    >
+      {/* Performance-Optimized 3D Background */}
+      <div className="absolute inset-0 z-0">
+        <Canvas dpr={[1, 1.5]}>
+          <PerspectiveCamera makeDefault position={[0, 0, 12]} fov={50} />
+          <ambientLight intensity={1} />
+          <pointLight position={[10, 10, 10]} intensity={1.5} />
+          <Suspense fallback={null}>
+            <MinimalistBackground />
+            <Environment preset="night" />
+          </Suspense>
+        </Canvas>
+      </div>
+
+      {/* Main UI Overlay */}
+      <div className="max-w-7xl mx-auto px-6 relative z-10 w-full flex flex-col items-center text-center">
+        <div className="hero-content space-y-10">
+          <div className="flex items-center justify-center gap-4 mb-4">
+            <span className="h-px w-8 bg-primary/30" />
+            <span className="text-primary font-mono text-[10px] uppercase tracking-[1em] whitespace-nowrap">Full Stack Architect</span>
+            <span className="h-px w-8 bg-primary/30" />
+          </div>
+
+          <h1 className="text-7xl md:text-[10rem] font-black text-white leading-none tracking-tighter uppercase mb-6 drop-shadow-[0_0_50px_rgba(59,130,246,0.1)]">
+            Safvan<span className="text-primary">.</span>
+          </h1>
+
+          <div className="flex flex-wrap items-center justify-center gap-6 text-gray-500 font-mono text-xs uppercase tracking-widest bg-white/[0.02] border border-white/5 py-4 px-10 rounded-full backdrop-blur-xl">
+            {["React", "NexJS", "NodeJS", "MongoDB", "Express.js"].map((tech, i) => (
+              <React.Fragment key={tech}>
+                <span className="hover:text-primary transition-colors cursor-default">{tech}</span>
+                {i < 4 && <span className="text-white/10">•</span>}
+              </React.Fragment>
+            ))}
+          </div>
+
+          <p className="text-gray-400 text-lg md:text-2xl font-light leading-relaxed max-w-2xl italic">
+            "Weaving complex logic into high-performance digital experiences.
+            Focused on the intersection of aesthetic precision and system scalability."
+          </p>
+
+          <div className="flex flex-wrap items-center justify-center gap-6 pt-6">
             <Link
               to="contact"
               smooth={true}
-              duration={500}
-              className="btn-secondary cursor-pointer"
+              duration={1000}
+              className="px-12 py-5 bg-white text-black font-black uppercase text-xs tracking-[0.4em] rounded-full hover:bg-primary hover:text-white transition-all shadow-2xl active:scale-95 cursor-pointer"
             >
-              Contact Me
+              Initiate Contact
             </Link>
-          </motion.div>
+          </div>
         </div>
-
-        {/* Image Content Block */}
-        <motion.div
-          className="w-full md:w-1/2 flex justify-center md:justify-end"
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-        >
-          <motion.div
-            className="relative group w-72 h-72 md:w-[26rem] md:h-[26rem]"
-            animate={{ y: [-15, 15, -15] }}
-            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-          >
-            {/* Soft Animated Glowing Backlight */}
-            <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-primary/80 to-purple-600/80 blur-[70px] opacity-40 group-hover:opacity-70 transition-opacity duration-500 z-0"
-              animate={{
-                scale: [1, 1.2, 1],
-                rotate: [0, 90, 0]
-              }}
-              transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-            ></motion.div>
-
-            {/* Creative Morphing Blob Container */}
-            <motion.div
-              className="relative w-full h-full bg-dark-surface border border-white/20 overflow-hidden shadow-[0_0_40px_rgba(59,130,246,0.3)] z-10"
-              animate={{
-                borderRadius: [
-                  "60% 40% 30% 70% / 60% 30% 70% 40%",
-                  "30% 70% 70% 30% / 30% 30% 70% 70%",
-                  "60% 40% 30% 70% / 60% 30% 70% 40%"
-                ]
-              }}
-              transition={{
-                duration: 8,
-                repeat: Infinity,
-                ease: "linear"
-              }}
-            >
-              <img src="/a.jpeg" alt="Safvan - MERN Stack Developer" className="w-full h-full object-cover scale-110 group-hover:scale-125 transition-transform duration-700" />
-            </motion.div>
-          </motion.div>
-        </motion.div>
       </div>
+
+      {/* Background Decorative Element */}
+      <div className="absolute bottom-20 left-1/2 -translate-x-1/2 text-[15rem] font-black text-white/[0.01] whitespace-nowrap select-none pointer-events-none tracking-tighter uppercase italic">
+        Digital Frontier
+      </div>
+
+      {/* Optimized Scroll Indicator */}
+      <div className="scroll-indicator absolute bottom-12 flex flex-col items-center gap-4 opacity-30">
+        <span className="text-[8px] font-mono text-white uppercase tracking-[0.4em] rotate-90">Scroll</span>
+        <div className="w-px h-10 bg-gradient-to-b from-white to-transparent" />
+      </div>
+
+      {/* Vignette Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#020202] pointer-events-none z-0" />
     </section>
   );
 }

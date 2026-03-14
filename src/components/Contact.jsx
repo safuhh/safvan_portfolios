@@ -1,15 +1,16 @@
-import { useState, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+'use client';
+import React, { useState, useRef } from "react";
 import emailjs from "@emailjs/browser";
 import { 
   FaPaperPlane, 
   FaSpinner, 
-  FaEnvelope, 
-  FaMapMarkerAlt, 
-  FaLinkedin, 
-  FaGithub, 
   FaCheckCircle, 
-  FaExclamationCircle 
+  FaExclamationCircle,
+  FaEnvelope,
+  FaLinkedin,
+  FaGithub,
+  FaMapMarkerAlt,
+  FaGlobe
 } from "react-icons/fa";
 
 export default function Contact() {
@@ -29,206 +30,138 @@ export default function Contact() {
     setStatus({ type: "", message: "" });
 
     try {
-      await emailjs.sendForm(
-        SERVICE_ID,
-        TEMPLATE_ID,
-        formRef.current,
-        { publicKey: PUBLIC_KEY }
-      );
-
-      setStatus({
-        type: "success",
-        message: "Message sent! I'll get back to you faster than light.",
-      });
+      await emailjs.sendForm(SERVICE_ID, TEMPLATE_ID, formRef.current, { publicKey: PUBLIC_KEY });
+      setStatus({ type: "success", message: "Message sent successfully!" });
       formRef.current.reset();
-      
-      // Clear success message after 5 seconds
       setTimeout(() => setStatus({ type: "", message: "" }), 5000);
     } catch (error) {
-      console.error("EmailJS Error:", error);
-      setStatus({
-        type: "error",
-        message: "Something went wrong. Let's try that again?",
-      });
+      console.error(error);
+      setStatus({ type: "error", message: "Failed to send. Please try again." });
     }
-
     setIsSubmitting(false);
   };
 
   return (
-    <section id="contact" className="section-container relative z-10 py-32 overflow-hidden">
-      {/* Dynamic Background Elements */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px] -z-10 pointer-events-none translate-x-1/2 -translate-y-1/2" />
-      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-[120px] -z-10 pointer-events-none -translate-x-1/2 translate-y-1/2" />
-
-      <motion.div
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.8 }}
-      >
-        <div className="text-center mb-24">
-          <motion.span 
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            className="text-primary font-mono tracking-[0.4em] uppercase text-sm mb-4 block"
-          >
-            05 / Connection
-          </motion.span>
-          <h2 className="text-5xl md:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white via-blue-200 to-gray-500 mb-6">
-            Get In Touch
+    <section id="contact" className="py-20 md:py-32 bg-[#020202] relative">
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
+        
+        {/* Simplified Responsive Header */}
+        <div className="mb-16 md:mb-24">
+          <div className="flex items-center gap-3 mb-6">
+            <span className="text-primary font-mono text-[10px] uppercase tracking-[0.4em]">Available for projects</span>
+            <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+          </div>
+          <h2 className="text-4xl md:text-7xl lg:text-8xl font-black text-white uppercase tracking-tighter leading-[0.9]">
+            Get In <span className="text-primary italic font-light lowercase">Touch.</span>
           </h2>
-          <div className="w-24 h-1 bg-primary mx-auto rounded-full" />
+          <p className="mt-6 text-gray-500 font-mono text-xs md:text-sm uppercase tracking-widest max-w-xl">
+            Building digital experiences that bridge the gap between design and technology.
+          </p>
         </div>
 
-        <div className="max-w-6xl mx-auto flex flex-col lg:flex-row gap-16">
-          {/* Left Column: Info Card */}
-          <motion.div 
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="lg:w-[35%] space-y-8"
-          >
-            <div className="glass-card p-10 border-primary/20 bg-dark-bg/40 backdrop-blur-2xl relative overflow-hidden group">
-              <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-                <FaEnvelope size={120} />
-              </div>
-              
-              <h3 className="text-2xl font-bold text-white mb-8">Contact Information</h3>
-              
-              <div className="space-y-8">
-                <div className="flex items-start gap-6 group/item">
-                  <div className="p-4 rounded-2xl bg-primary/10 border border-primary/20 text-primary group-hover/item:bg-primary group-hover/item:text-white transition-all duration-300">
-                    <FaEnvelope size={20} />
-                  </div>
-                  <div>
-                    <p className="text-gray-500 text-xs uppercase tracking-widest mb-1 font-mono">Email Me At</p>
-                    <p className="text-gray-200 font-medium">safvan@example.com</p>
+        <div className="grid lg:grid-cols-12 gap-12 md:gap-20">
+          
+          {/* Contact Info Sidebar */}
+          <div className="lg:col-span-5 space-y-8">
+            <div className="space-y-4">
+              {[
+                { label: "Direct", value: "safu99000@gmail.com", icon: <FaEnvelope /> },
+                { label: "Location", value: "Kerala, India", icon: <FaMapMarkerAlt /> },
+                { label: "Status", value: "Ready to Collaborate", icon: <FaGlobe />, color: "text-primary" }
+              ].map((item, i) => (
+                <div key={i} className="p-6 md:p-8 bg-white/[0.02] border border-white/5 rounded-3xl group hover:border-primary/20 transition-all">
+                  <div className="flex items-center gap-6">
+                    <div className="text-primary text-xl">{item.icon}</div>
+                    <div>
+                      <p className="text-[9px] font-mono text-gray-700 uppercase tracking-widest mb-1">{item.label}</p>
+                      <p className={`text-white font-bold tracking-tight ${item.color || "text-lg md:text-xl"}`}>{item.value}</p>
+                    </div>
                   </div>
                 </div>
-
-                <div className="flex items-start gap-6 group/item">
-                  <div className="p-4 rounded-2xl bg-primary/10 border border-primary/20 text-primary group-hover/item:bg-primary group-hover/item:text-white transition-all duration-300">
-                    <FaMapMarkerAlt size={20} />
-                  </div>
-                  <div>
-                    <p className="text-gray-500 text-xs uppercase tracking-widest mb-1 font-mono">Location</p>
-                    <p className="text-gray-200 font-medium">Kerala, India</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="pt-12">
-                <p className="text-gray-500 text-xs uppercase tracking-widest mb-6 font-mono font-bold">Social Echo</p>
-                <div className="flex gap-4">
-                  {[
-                    { icon: <FaLinkedin />, link: "https://linkedin.com", label: "LinkedIn" },
-                    { icon: <FaGithub />, link: "https://github.com", label: "GitHub" }
-                  ].map((social, idx) => (
-                    <a 
-                      key={idx}
-                      href={social.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="p-4 rounded-xl bg-white/5 border border-white/10 text-gray-400 hover:text-white hover:border-primary transition-all duration-300 hover:shadow-glow-sm"
-                      aria-label={social.label}
-                    >
-                      {social.icon}
-                    </a>
-                  ))}
-                </div>
-              </div>
+              ))}
             </div>
-          </motion.div>
 
-          {/* Right Column: Premium Form */}
-          <motion.div 
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="flex-grow"
-          >
-            <form
-              ref={formRef}
+            <div className="pt-8 flex gap-4">
+              {[
+                { icon: <FaLinkedin />, link: "https://www.linkedin.com/in/safvan-p-8386a524b/" },
+                { icon: <FaGithub />, link: "https://github.com/safuhh" }
+              ].map((social, idx) => (
+                <a 
+                  key={idx}
+                  href={social.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-14 h-14 rounded-2xl bg-white/[0.03] border border-white/5 flex items-center justify-center text-xl text-gray-500 hover:text-white hover:border-primary/50 transition-all"
+                >
+                  {social.icon}
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* Clean Form Section */}
+          <div className="lg:col-span-7">
+            <form 
+              ref={formRef} 
               onSubmit={handleSubmit}
-              className="glass-card p-8 md:p-12 border-white/10 bg-dark-bg/30 backdrop-blur-xl relative"
+              className="bg-[#080808] border border-white/5 rounded-[2rem] md:rounded-[3rem] p-8 md:p-12 space-y-8"
             >
-              {/* Alert Message */}
-              <AnimatePresence>
-                {status.message && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0, y: -20 }}
-                    animate={{ opacity: 1, height: "auto", y: 0 }}
-                    exit={{ opacity: 0, height: 0, y: -20 }}
-                    className={`mb-8 p-5 rounded-2xl flex items-center gap-4 ${
-                      status.type === "success" 
-                        ? "bg-green-500/10 border border-green-500/20 text-green-400" 
-                        : "bg-red-500/10 border border-red-500/20 text-red-400"
-                    }`}
-                  >
-                    {status.type === "success" ? <FaCheckCircle size={22}/> : <FaExclamationCircle size={22}/>}
-                    <p className="text-sm font-medium tracking-tight">{status.message}</p>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
-              <div className="grid md:grid-cols-2 gap-8 mb-8">
-                <div className="space-y-2">
-                  <label className="text-[10px] font-mono uppercase tracking-[0.2em] text-gray-500 ml-1">Identity</label>
+              <div className="grid md:grid-cols-2 gap-8">
+                <div className="space-y-3">
+                  <label className="text-[10px] font-mono uppercase tracking-widest text-gray-600 ml-2">Name</label>
                   <input
                     type="text"
                     name="name"
-                    placeholder="E.g. Elon Musk"
                     required
-                    className="w-full p-4 rounded-2xl bg-white/5 border border-white/5 text-white focus:outline-none focus:border-primary/50 focus:bg-white/[0.08] transition-all placeholder:text-gray-700"
+                    placeholder="Identity"
+                    className="w-full px-6 py-5 rounded-2xl bg-white/[0.02] border border-white/10 text-white focus:outline-none focus:border-primary transition-all placeholder:text-gray-800"
                   />
                 </div>
-                <div className="space-y-2">
-                  <label className="text-[10px] font-mono uppercase tracking-[0.2em] text-gray-500 ml-1">Digital Address</label>
+                <div className="space-y-3">
+                  <label className="text-[10px] font-mono uppercase tracking-widest text-gray-600 ml-2">Email</label>
                   <input
                     type="email"
                     name="user_email"
-                    placeholder="name@company.com"
                     required
-                    className="w-full p-4 rounded-2xl bg-white/5 border border-white/5 text-white focus:outline-none focus:border-primary/50 focus:bg-white/[0.08] transition-all placeholder:text-gray-700"
+                    placeholder="Contact@domain"
+                    className="w-full px-6 py-5 rounded-2xl bg-white/[0.02] border border-white/10 text-white focus:outline-none focus:border-primary transition-all placeholder:text-gray-800"
                   />
                 </div>
               </div>
 
-              <div className="space-y-2 mb-8">
-                <label className="text-[10px] font-mono uppercase tracking-[0.2em] text-gray-500 ml-1">The Message</label>
+              <div className="space-y-3">
+                <label className="text-[10px] font-mono uppercase tracking-widest text-gray-600 ml-2">Description</label>
                 <textarea
                   name="message"
-                  rows="6"
-                  placeholder="Tell me about your vision..."
+                  rows="5"
                   required
-                  className="w-full p-5 rounded-2xl bg-white/5 border border-white/5 text-white focus:outline-none focus:border-primary/50 focus:bg-white/[0.08] transition-all resize-none placeholder:text-gray-700 mt-1"
+                  placeholder="Tell me about your project..."
+                  className="w-full px-6 py-6 rounded-3xl bg-white/[0.02] border border-white/10 text-white focus:outline-none focus:border-primary transition-all resize-none placeholder:text-gray-800"
                 />
               </div>
-
-              {/* Bot Check / Hidden Field */}
-              <input type="hidden" name="time" value={new Date().toLocaleString()} />
 
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full btn-primary py-5 rounded-2xl flex items-center justify-center gap-4 text-lg group active:scale-95 disabled:opacity-50 disabled:active:scale-100 uppercase tracking-[0.2em] font-bold"
+                className="w-full py-6 rounded-2xl bg-primary text-white font-black uppercase text-xs tracking-[0.5em] hover:brightness-110 active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-4"
               >
-                {isSubmitting ? (
-                  <>
-                    <FaSpinner className="animate-spin" /> Transmission...
-                  </>
-                ) : (
-                  <>
-                    Send Message 
-                    <FaPaperPlane className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300" />
-                  </>
-                )}
+                {isSubmitting ? <FaSpinner className="animate-spin" /> : <>Send Message <FaPaperPlane /></>}
               </button>
+
+              {status.message && (
+                <div className={`p-4 rounded-xl text-center text-[10px] font-mono uppercase tracking-widest ${
+                  status.type === "success" ? "text-green-500 bg-green-500/5" : "text-red-500 bg-red-500/5"
+                }`}>
+                  {status.message}
+                </div>
+              )}
             </form>
-          </motion.div>
+          </div>
         </div>
-      </motion.div>
+      </div>
+
+      {/* Static Decorative Elements */}
+      <div className="absolute bottom-0 right-0 w-64 h-64 bg-primary/5 blur-[120px] pointer-events-none" />
     </section>
   );
 }
