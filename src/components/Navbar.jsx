@@ -2,7 +2,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-scroll';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaGithub, FaLinkedin, FaInstagram } from 'react-icons/fa';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -70,16 +69,16 @@ export default function Navbar() {
 
   const linkVariants = {
     initial: { y: 100, opacity: 0 },
-    animate: { 
-      y: 0, 
+    animate: {
+      y: 0,
       opacity: 1,
       transition: {
         duration: 0.7,
         ease: [0.215, 0.61, 0.355, 1],
       }
     },
-    exit: { 
-      y: 100, 
+    exit: {
+      y: 100,
       opacity: 0,
       transition: {
         duration: 0.4,
@@ -90,10 +89,10 @@ export default function Navbar() {
 
   const footerVariants = {
     initial: { opacity: 0, y: 20 },
-    animate: { 
-      opacity: 1, 
+    animate: {
+      opacity: 1,
       y: 0,
-      transition: { delay: 1, duration: 0.5 } 
+      transition: { delay: 1, duration: 0.5 }
     },
     exit: { opacity: 0, y: 20 }
   };
@@ -128,7 +127,7 @@ export default function Navbar() {
           </div>
 
           {/* Mobile Toggle */}
-          <button 
+          <button
             className="md:hidden relative w-10 h-10 flex flex-col justify-center items-end gap-1.5 z-[100] group"
             onClick={() => setIsOpen(!isOpen)}
             aria-label="Toggle Menu"
@@ -151,13 +150,13 @@ export default function Navbar() {
             className="fixed inset-0 bg-[#0a0a0a] z-[90] md:hidden flex flex-col justify-center px-10 overflow-hidden"
           >
             {/* Close Interaction */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.8 }}
               className="absolute top-8 right-8 z-[110]"
             >
-              <button 
+              <button
                 onClick={() => setIsOpen(false)}
                 suppressHydrationWarning
                 className="group flex items-center gap-3 bg-white/5 hover:bg-white/10 backdrop-blur-md border border-white/10 px-6 py-2.5 rounded-full transition-all active:scale-95"
@@ -170,19 +169,14 @@ export default function Navbar() {
               </button>
             </motion.div>
 
-            {/* Background Texture */}
-            <div className="absolute inset-0 opacity-[0.03] pointer-events-none overflow-hidden font-black text-[25vw] leading-none select-none italic text-white p-10 flex items-center">
-              NAVIGATION
-            </div>
-
-            <motion.div 
+            <motion.div
               variants={containerVariants}
               className="flex flex-col gap-8 relative z-10"
             >
               <div className="mb-4">
                 <span className="text-primary font-mono text-[10px] uppercase tracking-[0.5em] font-bold">Explore</span>
               </div>
-              
+
               {navLinks.map((link, i) => (
                 <div key={link.name} className="overflow-hidden h-16 flex items-center">
                   <motion.div variants={linkVariants} className="w-full">
@@ -205,20 +199,13 @@ export default function Navbar() {
             </motion.div>
 
             {/* Mobile Footer */}
-            <motion.div 
+            <motion.div
               variants={footerVariants}
               className="absolute bottom-12 left-10 right-10 z-10"
             >
-              <div className="h-px w-full bg-white/5 mb-10" />
-              <div className="flex flex-col gap-8">
-                <div className="flex gap-8">
-                  <motion.a whileHover={{ y: -2 }} href="https://github.com/safuhh" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-white transition-colors flex items-center gap-2 text-[10px] uppercase font-bold tracking-[0.2em]"><FaGithub size={18} /> Github</motion.a>
-                  <motion.a whileHover={{ y: -2 }} href="https://www.linkedin.com/in/safvan-p-/" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-white transition-colors flex items-center gap-2 text-[10px] uppercase font-bold tracking-[0.2em]"><FaLinkedin size={18} /> LinkedIn</motion.a>
-                  <motion.a whileHover={{ y: -2 }} href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-white transition-colors flex items-center gap-2 text-[10px] uppercase font-bold tracking-[0.2em]"><FaInstagram size={18} /> Instagram</motion.a>
-                </div>
-                <div className="text-[10px] font-mono text-gray-800 uppercase tracking-[0.5em]">
-                  &copy; {new Date().getFullYear()} SAFVAN STUDIO
-                </div>
+              <div className="h-px w-full bg-white/5 mb-8" />
+              <div className="text-[10px] font-mono text-gray-800 uppercase tracking-[0.5em]">
+                &copy; {new Date().getFullYear()} SAFVAN STUDIO
               </div>
             </motion.div>
           </motion.div>
