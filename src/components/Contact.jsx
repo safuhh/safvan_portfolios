@@ -114,6 +114,7 @@ export default function Contact() {
                     name="name"
                     required
                     placeholder="Identity"
+                    suppressHydrationWarning
                     className="w-full px-6 py-5 rounded-2xl bg-white/[0.02] border border-white/10 text-white focus:outline-none focus:border-primary transition-all placeholder:text-gray-800"
                   />
                 </div>
@@ -124,6 +125,7 @@ export default function Contact() {
                     name="user_email"
                     required
                     placeholder="Contact@domain"
+                    suppressHydrationWarning
                     className="w-full px-6 py-5 rounded-2xl bg-white/[0.02] border border-white/10 text-white focus:outline-none focus:border-primary transition-all placeholder:text-gray-800"
                   />
                 </div>
@@ -143,6 +145,7 @@ export default function Contact() {
               <button
                 type="submit"
                 disabled={isSubmitting}
+                suppressHydrationWarning
                 className="w-full py-6 rounded-2xl bg-primary text-white font-black uppercase text-xs tracking-[0.5em] hover:brightness-110 active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-4"
               >
                 {isSubmitting ? <FaSpinner className="animate-spin" /> : <>Send Message <FaPaperPlane /></>}

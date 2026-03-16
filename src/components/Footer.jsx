@@ -8,7 +8,11 @@ export default function Footer() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const currentYear = new Date().getFullYear();
+  const [currentYear, setCurrentYear] = React.useState(null);
+  
+  React.useEffect(() => {
+    setCurrentYear(new Date().getFullYear());
+  }, []);
 
   return (
     <footer className="bg-[#020202] pt-20 pb-10 relative overflow-hidden">
@@ -66,6 +70,7 @@ export default function Footer() {
           <div className="flex justify-center order-first md:order-none">
             <button
               onClick={scrollToTop}
+              suppressHydrationWarning
               className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center group hover:bg-primary transition-all duration-500"
             >
               <FaArrowUp className="text-white text-sm group-hover:-translate-y-1 transition-transform" />
@@ -81,9 +86,9 @@ export default function Footer() {
 
         {/* Copyright & Meta */}
         <div className="flex flex-col md:flex-row justify-between items-center pt-10 gap-6">
-          <p className="text-gray-600 font-mono text-[10px] uppercase tracking-widest">
-            &copy; {currentYear} // Designed & Developed by Safvan
-          </p>
+            <p className="text-gray-600 font-mono text-[10px] uppercase tracking-widest">
+              &copy; {currentYear || '2024'} // Designed & Developed by Safvan
+            </p>
           
           <div className="flex gap-8">
             {['Privacy', 'Legal', 'System'].map((item) => (
