@@ -1,10 +1,10 @@
 'use client';
 import React, { useState, useRef } from "react";
 import emailjs from "@emailjs/browser";
-import { 
-  FaPaperPlane, 
-  FaSpinner, 
-  FaCheckCircle, 
+import {
+  FaPaperPlane,
+  FaSpinner,
+  FaCheckCircle,
   FaExclamationCircle,
   FaEnvelope,
   FaLinkedin,
@@ -44,7 +44,7 @@ export default function Contact() {
   return (
     <section id="contact" className="py-20 md:py-32 bg-[#020202] relative">
       <div className="max-w-7xl mx-auto px-6 relative z-10">
-        
+
         {/* Simplified Responsive Header */}
         <div className="mb-16 md:mb-24">
           <div className="flex items-center gap-3 mb-6">
@@ -60,12 +60,12 @@ export default function Contact() {
         </div>
 
         <div className="grid lg:grid-cols-12 gap-12 md:gap-20">
-          
+
           {/* Contact Info Sidebar */}
           <div className="lg:col-span-5 space-y-8">
             <div className="space-y-4">
               {[
-                { label: "Direct", value: "safu99000@gmail.com", icon: <FaEnvelope /> },
+                { label: "Direct", value: "safvann000@gmail.com", icon: <FaEnvelope /> },
                 { label: "Location", value: "Kerala, India", icon: <FaMapMarkerAlt /> },
                 { label: "Status", value: "Ready to Collaborate", icon: <FaGlobe />, color: "text-primary" }
               ].map((item, i) => (
@@ -86,7 +86,7 @@ export default function Contact() {
                 { icon: <FaLinkedin />, link: "https://www.linkedin.com/in/safvan-p-8386a524b/" },
                 { icon: <FaGithub />, link: "https://github.com/safuhh" }
               ].map((social, idx) => (
-                <a 
+                <a
                   key={idx}
                   href={social.link}
                   target="_blank"
@@ -101,8 +101,8 @@ export default function Contact() {
 
           {/* Clean Form Section */}
           <div className="lg:col-span-7">
-            <form 
-              ref={formRef} 
+            <form
+              ref={formRef}
               onSubmit={handleSubmit}
               className="bg-[#080808] border border-white/5 rounded-[2rem] md:rounded-[3rem] p-8 md:p-12 space-y-8"
             >
@@ -152,9 +152,8 @@ export default function Contact() {
               </button>
 
               {status.message && (
-                <div className={`p-4 rounded-xl text-center text-[10px] font-mono uppercase tracking-widest ${
-                  status.type === "success" ? "text-green-500 bg-green-500/5" : "text-red-500 bg-red-500/5"
-                }`}>
+                <div className={`p-4 rounded-xl text-center text-[10px] font-mono uppercase tracking-widest ${status.type === "success" ? "text-green-500 bg-green-500/5" : "text-red-500 bg-red-500/5"
+                  }`}>
                   {status.message}
                 </div>
               )}

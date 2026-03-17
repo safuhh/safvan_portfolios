@@ -2,120 +2,132 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
+import { motion, AnimatePresence } from 'framer-motion';
+
+const STATUS_MESSAGES = [
+  "INITIALIZING NEURAL INTERFACE...",
+  "MAPPING DIGITAL FRONTIER...",
+  "SYNCHRONIZING CORE MODULES...",
+  "OPTIMIZING SPATIAL RENDERING...",
+  "ESTABLISHING SECURE PROTOCOLS...",
+  "SYSTEMS ONLINE."
+];
 
 export default function LoadingIntro({ onComplete }) {
   const containerRef = useRef(null);
-  const textRef = useRef(null);
-  const letterRefs = useRef([]);
   const [counter, setCounter] = useState(0);
+  const [statusIndex, setStatusIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
-
-  const word = "Digital Creations";
-  const letters = word.split("");
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     if (!containerRef.current) return;
 
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({
         onComplete: () => {
-          setIsVisible(false);
-          if (onComplete) onComplete();
+          gsap.to(containerRef.current, {
+            opacity: 0,
+            duration: 1.5,
+            ease: "expo.inOut",
+            onComplete: () => {
+              setIsVisible(false);
+              if (onComplete) onComplete();
+            }
+          });
         }
       });
 
-      // Initial state
-      gsap.set(".panel", { scaleY: 1 });
-      gsap.set(letterRefs.current, {
-        y: 40,
-        opacity: 0,
-        filter: "blur(15px)",
-      });
-      gsap.set(".loader-line", { scaleX: 0 });
-      gsap.set(".status-element", { opacity: 0, y: 10 });
+      // 1. Initial State
+      gsap.set(".logo-reveal", { y: 100, opacity: 0 });
+      gsap.set(".scanner-line", { scaleX: 0, opacity: 0 });
+      gsap.set(".glitch-char", { opacity: 0, scale: 0.8 });
+      gsap.set(".meta-block", { opacity: 0, x: -20 });
 
-      // 1. Initial Sequence
-      tl.to(".status-element", {
-        opacity: 1,
-        y: 0,
-        duration: 0.5,
-        stagger: 0.1,
-        ease: "power2.out"
-      })
+      tl
+        // 2. The Power On (Flicker)
+        .to(containerRef.current, {
+            backgroundColor: "#000000",
+            duration: 0.1
+        })
+        .to(".scanner-line", {
+            scaleX: 1,
+            opacity: 0.8,
+            duration: 1.2,
+            ease: "expo.inOut"
+        })
+        .to(".scanner-line", {
+            top: "100%",
+            duration: 2.5,
+            ease: "none"
+        }, "-=0.2")
+
+        // 3. Status Cycle
+        .to({ val: 0 }, {
+            val: STATUS_MESSAGES.length - 1,
+            duration: 4,
+            ease: "none",
+            onUpdate: function() {
+                setStatusIndex(Math.floor(this.targets()[0].val));
+            }
+        }, 0.5)
+
+        // 4. Percentage Counter
         .to({ val: 0 }, {
           val: 100,
-          duration: 2.8,
-          ease: "power4.inOut",
-          onUpdate: function () {
+          duration: 4.5,
+          ease: "power2.inOut",
+          onUpdate: function() {
             setCounter(Math.floor(this.targets()[0].val));
           }
-        }, 0.2)
+        }, 0.5)
 
-        // 2. Text Reveal (Cinematic Focus)
-        .to(letterRefs.current, {
-          y: 0,
-          opacity: 1,
-          filter: "blur(0px)",
-          duration: 1.5,
-          stagger: {
-            each: 0.05,
-            from: "center"
-          },
-          ease: "expo.out",
-        }, 0.6)
+        // 5. Letter Reveal (Glitchy & Smooth)
+        .to(".glitch-char", {
+            opacity: 1,
+            scale: 1,
+            duration: 0.05,
+            stagger: {
+                amount: 0.8,
+                from: "random"
+            },
+            ease: "power4.out"
+        }, "-=3.5")
+        .to(".glitch-char", {
+            color: "#ffffff",
+            textShadow: "0 0 20px rgba(255,255,255,0.8)",
+            duration: 0.5,
+            stagger: 0.1
+        }, "-=2")
 
-        // 3. Spacing/Tracking Expansion
-        .fromTo(textRef.current,
-          { letterSpacing: "-0.2em" },
-          { letterSpacing: "0.4em", duration: 3, ease: "power2.out" },
-          0.6
-        )
+        // 6. Meta Reveal
+        .to(".meta-block", {
+            opacity: 1,
+            x: 0,
+            duration: 1,
+            stagger: 0.2,
+            ease: "back.out(1.7)"
+        }, "-=3")
 
-        // 4. Progress Line
-        .to(".loader-line", {
-          scaleX: 1,
-          duration: 2.8,
-          ease: "power4.inOut",
-        }, 0.2)
-
-        // 5. High-Frequency Micro-Glitch
-        .to(textRef.current, {
-          skewX: 10,
-          duration: 0.05,
-          repeat: 1,
-          yoyo: true,
-          ease: "none"
-        }, "+=0.1")
-        .to(textRef.current, {
-          opacity: 0.5,
-          duration: 0.03,
-          repeat: 3,
-          yoyo: true,
-          ease: "none"
-        }, "<")
-
-        // 6. Cinematic Exit
-        .to(textRef.current, {
-          scale: 1.2,
-          opacity: 0,
-          filter: "blur(20px)",
-          duration: 0.8,
-          ease: "power4.in"
-        }, "+=0.2")
-        .to(".panel-top", {
-          yPercent: -100,
-          duration: 1.2,
-          ease: "expo.inOut"
-        }, "-=0.4")
-        .to(".panel-bottom", {
-          yPercent: 100,
-          duration: 1.2,
-          ease: "expo.inOut"
-        }, "<")
-        .to(".status-element, .loader-line-container", {
-          opacity: 0,
-          duration: 0.4,
-        }, "-=1");
+        // 7. Exit Burst
+        .to(".scanner-line", {
+            opacity: 0,
+            duration: 0.5
+        })
+        .to(".glitch-char", {
+            letterSpacing: "2em",
+            opacity: 0,
+            filter: "blur(20px)",
+            duration: 1.5,
+            ease: "expo.inOut"
+        }, "-=0.5")
+        .to(".glow-aura", {
+            scale: 4,
+            opacity: 0,
+            duration: 2,
+            ease: "expo.inOut"
+        }, "-=1.5");
 
     }, containerRef);
 
@@ -127,60 +139,129 @@ export default function LoadingIntro({ onComplete }) {
   return (
     <div
       ref={containerRef}
-      className="fixed inset-0 z-[9999] flex items-center justify-center bg-transparent overflow-hidden"
+      className="fixed inset-0 z-[9999] bg-black flex items-center justify-center overflow-hidden font-mono selection:bg-none"
     >
-      {/* Background Noise Texture */}
-      <div className="absolute inset-0 opacity-[0.04] pointer-events-none z-[1] contrast-150 brightness-150"
-        style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }}
-      />
+      {/* Cinematic Background Elements */}
+      <div className="absolute inset-0 pointer-events-none">
+        {/* Holographic Grid */}
+        <div className="absolute inset-0 opacity-[0.03]" 
+             style={{ 
+                 backgroundImage: `linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)`,
+                 backgroundSize: '100px 100px'
+             }} 
+        />
+        
+        {/* Radial Aura Glow */}
+        <div className="glow-aura absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[50vw] h-[50vw] rounded-full bg-blue-500/5 blur-[120px]" />
+        
+        {/* Moving Scanner Line */}
+        <div className="scanner-line absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-cyan-400/50 to-transparent shadow-[0_0_15px_rgba(34,211,238,0.5)] z-50" />
+      </div>
 
-      {/* Cinematic Panels */}
-      <div className="panel panel-top absolute top-0 left-0 w-full h-[51%] bg-[#080808] border-b border-white/5 shadow-[0_10px_30px_rgba(0,0,0,0.5)]" />
-      <div className="panel panel-bottom absolute bottom-0 left-0 w-full h-[51%] bg-[#080808] border-t border-white/5 shadow-[0_-10px_30px_rgba(0,0,0,0.5)]" />
-
-      {/* Main Content */}
-      <div className="relative z-10 flex flex-col items-center">
-        <div
-          ref={textRef}
-          className="flex items-center justify-center"
-        >
-          {letters.map((letter, index) => (
-            <span
-              key={index}
-              ref={(el) => (letterRefs.current[index] = el)}
-              className="text-4xl md:text-7xl lg:text-9xl font-black text-white inline-block select-none pointer-events-none drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]"
-            >
-              {letter}
-            </span>
-          ))}
+      {/* Main UI Interface */}
+      <div className="relative z-10 w-full max-w-7xl px-8 flex flex-col items-center">
+        
+        {/* Top Left: System Architecture */}
+        <div className="meta-block absolute top-12 left-12 hidden md:flex flex-col gap-1">
+            <span className="text-[8px] text-zinc-600 tracking-[0.4em] uppercase">Architecture</span>
+            <span className="text-[10px] text-white/40 tracking-widest uppercase">NX_CORE_v2.0</span>
+            <div className="w-24 h-px bg-white/10 mt-2" />
         </div>
 
-        {/* Global Loading Line */}
-        <div className="mt-12 w-64 md:w-[28rem] overflow-hidden loader-line-container opacity-20">
-          <div className="loader-line h-[1px] bg-white w-full origin-left" />
+        {/* Top Right: Clock/Time */}
+        <div className="meta-block absolute top-12 right-12 hidden md:flex flex-col items-end gap-1 text-right">
+            <span className="text-[8px] text-zinc-600 tracking-[0.4em] uppercase">Local Status</span>
+            <span className="text-[10px] text-white/40 tracking-widest uppercase">NODE_ACTIVE</span>
+            <div className="flex gap-1 mt-2">
+                {[...Array(4)].map((_, i) => (
+                    <div key={i} className="w-1 h-1 bg-cyan-500/40 rounded-full animate-pulse" style={{ animationDelay: `${i * 0.2}s` }} />
+                ))}
+            </div>
+        </div>
+
+        {/* Center: Hero Reveal */}
+        <div className="flex flex-col items-center gap-8">
+            <div className="flex items-center gap-1 md:gap-4 overflow-hidden">
+                {"WELCOME".split("").map((char, i) => (
+                    <span key={i} className="glitch-char text-6xl md:text-[10rem] font-bold tracking-tighter text-white/10 leading-none">
+                        {char}
+                    </span>
+                ))}
+            </div>
+
+            {/* Status & Loader */}
+            <div className="flex flex-col items-center gap-6 mt-12">
+                <AnimatePresence mode="wait">
+                    <motion.p
+                        key={statusIndex}
+                        initial={{ opacity: 0, y: 5 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -5 }}
+                        transition={{ duration: 0.5, ease: "circOut" }}
+                        className="text-[9px] md:text-[11px] text-cyan-400/60 uppercase tracking-[0.6em] font-light text-center h-4"
+                    >
+                        {STATUS_MESSAGES[statusIndex]}
+                    </motion.p>
+                </AnimatePresence>
+
+                {/* Counter & Progress bar */}
+                <div className="flex flex-col items-center gap-3">
+                    <span className="text-2xl md:text-3xl font-light text-white/80 tracking-tighter tabular-nums antialiased">
+                        {counter?.toString().padStart(2, '0')}<span className="text-[10px] opacity-20 ml-1">%</span>
+                    </span>
+                    <div className="w-48 md:w-64 h-[2px] bg-white/5 relative overflow-hidden">
+                        <motion.div 
+                            className="absolute top-0 left-0 h-full bg-cyan-400"
+                            style={{ width: `${counter}%` }}
+                        />
+                        <div className="absolute top-0 left-0 h-full w-full bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {/* Bottom Left: Coordinates */}
+        <div className="meta-block absolute bottom-12 left-12 hidden md:flex flex-col gap-1">
+            <span className="text-[8px] text-zinc-600 tracking-[0.4em] uppercase">Coordinates</span>
+            <span className="text-[9px] text-white/30 tracking-widest font-mono">LAT_28.6139 | LON_77.2090</span>
+        </div>
+
+        {/* Bottom Right: Digital Signature */}
+        <div className="meta-block absolute bottom-12 right-12 hidden md:flex flex-col items-end text-right">
+            <span className="text-[8px] text-zinc-600 tracking-[0.4em] uppercase">Legal</span>
+            <span className="text-[9px] text-white/30 tracking-widest uppercase">© MMXXVI PORTFOLIO OS</span>
         </div>
       </div>
 
-      {/* System Metadata */}
-      <div className="absolute bottom-12 left-12 z-20 font-mono text-[9px] uppercase tracking-[0.4em] text-white/30 hidden md:block">
-        <div className="status-element mb-1">System: Online</div>
-        <div className="status-element mb-1">Access: Authorized</div>
-        <div className="status-element">Module: Portfolio_v2.0</div>
-      </div>
+      {/* Film Grain & Overlay Texture */}
+      <div className="absolute inset-0 z-50 pointer-events-none opacity-[0.03]"
+           style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stichTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")` }} />
+      
+      {/* Global Vignette */}
+      <div className="absolute inset-0 z-40 pointer-events-none shadow-[inset_0_0_150px_rgba(0,0,0,1)] bg-gradient-to-t from-black/80 via-transparent to-black/80" />
 
-      <div className="absolute bottom-12 right-12 z-20 text-white font-mono text-sm flex flex-col items-end status-element">
-        <div className="flex items-center space-x-6 mb-2">
-          <span className="uppercase tracking-[0.5em] text-[8px] opacity-40">Loading Sequence</span>
-          <span className="w-12 text-right text-lg font-light">{counter}%</span>
-        </div>
-        <div className="w-32 h-[1px] bg-white/10 relative overflow-hidden">
-          <div className="absolute inset-0 bg-primary/40 animate-pulse" style={{ width: `${counter}%` }} />
-        </div>
-      </div>
-
-      {/* Subtle Scanline */}
-      <div className="absolute inset-0 z-15 pointer-events-none overflow-hidden opacity-10">
-        <div className="w-full h-1 bg-white/20 blur-[2px] absolute animate-scan" />
+      {/* Floating Particle System */}
+      <div className="absolute inset-0 pointer-events-none">
+        {mounted && [...Array(15)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-px h-px bg-white/10 rounded-full"
+            initial={{ 
+              x: Math.random() * 100 + "%", 
+              y: Math.random() * 100 + "%",
+              opacity: 0 
+            }}
+            animate={{ 
+              y: ["0%", "-30%"],
+              opacity: [0, 1, 0]
+            }}
+            transition={{ 
+              duration: 5 + Math.random() * 10, 
+              repeat: Infinity, 
+              delay: Math.random() * 5 
+            }}
+          />
+        ))}
       </div>
     </div>
   );

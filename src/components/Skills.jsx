@@ -1,11 +1,11 @@
 'use client';
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  FaReact, FaNodeJs, FaProjectDiagram, FaPython 
+import {
+  FaReact, FaNodeJs, FaProjectDiagram, FaPython
 } from 'react-icons/fa';
-import { 
-  SiNextdotjs, SiJavascript, SiTypescript, 
+import {
+  SiNextdotjs, SiJavascript, SiTypescript,
   SiTailwindcss, SiExpress, SiMongodb, SiRedux, SiFirebase, SiDocker, SiVite
 } from 'react-icons/si';
 
@@ -37,9 +37,9 @@ export default function Skills() {
   const SkillCard = ({ skill }) => (
     <div className="flex-shrink-0 px-4 md:px-6">
       <div className="group relative h-28 w-44 md:h-32 md:w-56 bg-[#080808] border border-white/[0.05] rounded-3xl flex flex-col items-center justify-center transition-all duration-500 hover:bg-white/[0.03] hover:border-primary/30 hover:shadow-[0_0_30px_rgba(59,130,246,0.1)]">
-        <div 
+        <div
           className="text-4xl md:text-5xl mb-4 transition-all duration-500 group-hover:scale-110 group-hover:drop-shadow-[0_0_15px_rgba(var(--skill-color-rgb),0.5)]"
-          style={{ 
+          style={{
             color: skill.color,
           }}
         >
@@ -48,9 +48,9 @@ export default function Skills() {
         <span className="text-[10px] font-bold text-gray-500 group-hover:text-white transition-colors uppercase tracking-[0.3em]">
           {skill.name}
         </span>
-        
+
         {/* Dynamic Glow */}
-        <div 
+        <div
           className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-700 blur-3xl pointer-events-none rounded-3xl"
           style={{ backgroundColor: skill.color }}
         />
@@ -59,8 +59,8 @@ export default function Skills() {
   );
 
   return (
-    <section 
-      id="skills" 
+    <section
+      id="skills"
       className="py-24 md:py-40 bg-[#020202] relative overflow-hidden"
     >
       {/* Background Ambience */}
@@ -71,7 +71,7 @@ export default function Skills() {
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-10">
           <div className="max-w-2xl">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
@@ -80,7 +80,7 @@ export default function Skills() {
               <span className="w-12 h-[1px] bg-primary/50" />
               <span className="text-primary font-mono text-[10px] uppercase tracking-[0.5em] font-semibold">Stack & Expertise</span>
             </motion.div>
-            <motion.h2 
+            <motion.h2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -90,7 +90,7 @@ export default function Skills() {
               Calculated <span className="text-gray-600 font-light italic">Capabilities.</span>
             </motion.h2>
           </div>
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
@@ -109,12 +109,12 @@ export default function Skills() {
         <div className="absolute inset-y-0 right-0 w-32 md:w-80 bg-gradient-to-l from-[#020202] via-[#020202]/80 to-transparent z-20 pointer-events-none" />
 
         {/* Row 1: Leftward */}
-        <div 
+        <div
           className="flex overflow-hidden"
           onMouseEnter={() => setIsHoveredRow1(true)}
           onMouseLeave={() => setIsHoveredRow1(false)}
         >
-          <motion.div 
+          <motion.div
             className="flex whitespace-nowrap"
             animate={{ x: [0, "-33.33%"] }}
             transition={{
@@ -124,7 +124,7 @@ export default function Skills() {
               repeatType: "loop",
               paused: isHoveredRow1
             }}
-            style={{ 
+            style={{
               animationPlayState: isHoveredRow1 ? 'paused' : 'running'
             }}
           >
@@ -135,12 +135,12 @@ export default function Skills() {
         </div>
 
         {/* Row 2: Rightward */}
-        <div 
+        <div
           className="flex overflow-hidden"
           onMouseEnter={() => setIsHoveredRow2(true)}
           onMouseLeave={() => setIsHoveredRow2(false)}
         >
-          <motion.div 
+          <motion.div
             className="flex whitespace-nowrap"
             animate={{ x: ["-33.33%", 0] }}
             transition={{
@@ -149,7 +149,7 @@ export default function Skills() {
               ease: "linear",
               repeatType: "loop"
             }}
-            style={{ 
+            style={{
               animationPlayState: isHoveredRow2 ? 'paused' : 'running'
             }}
           >

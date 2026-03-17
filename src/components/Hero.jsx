@@ -1,50 +1,9 @@
 'use client';
-import React, { useRef, Suspense, useMemo } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
-import {
-  Float,
-  PerspectiveCamera,
-  MeshDistortMaterial,
-  Sphere,
-  Environment,
-  Points,
-  PointMaterial,
-  Sparkles
-} from '@react-three/drei';
+import React, { useRef } from 'react';
 import { gsap } from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-scroll';
-
-function MinimalistBackground() {
-  const meshRef = useRef();
-
-  useFrame((state) => {
-    const time = state.clock.getElapsedTime();
-    if (meshRef.current) {
-      meshRef.current.rotation.x = time * 0.1;
-      meshRef.current.rotation.y = time * 0.15;
-    }
-  });
-
-  return (
-    <group>
-      <Float speed={2} rotationIntensity={0.5} floatIntensity={1}>
-        <mesh ref={meshRef}>
-          <icosahedronGeometry args={[4, 0]} />
-          <meshStandardMaterial
-            color="#3b82f6"
-            wireframe
-            transparent
-            opacity={0.1}
-          />
-        </mesh>
-      </Float>
-
-      <Sparkles count={100} scale={20} size={2} speed={0.5} opacity={0.3} color="#3b82f6" />
-    </group>
-  );
-}
 
 export default function Hero() {
   const containerRef = useRef();
@@ -76,17 +35,9 @@ export default function Hero() {
       id="home"
       className="min-h-screen relative flex items-center justify-center pt-20 overflow-hidden bg-[#020202]"
     >
-      {/* Performance-Optimized 3D Background */}
-      <div className="absolute inset-0 z-0">
-        <Canvas dpr={[1, 1.5]}>
-          <PerspectiveCamera makeDefault position={[0, 0, 12]} fov={50} />
-          <ambientLight intensity={1} />
-          <pointLight position={[10, 10, 10]} intensity={1.5} />
-          <Suspense fallback={null}>
-            <MinimalistBackground />
-            <Environment preset="night" />
-          </Suspense>
-        </Canvas>
+      {/* 3D Background Placeholder or Empty */}
+      <div className="absolute inset-0 z-0 pointer-events-none opacity-60">
+        {/* Ballpit removed */}
       </div>
 
       {/* Main UI Overlay */}
@@ -112,8 +63,8 @@ export default function Hero() {
           </div>
 
           <p className="text-gray-400 text-lg md:text-2xl font-light leading-relaxed max-w-2xl italic">
-            "Weaving complex logic into high-performance digital experiences.
-            Focused on the intersection of aesthetic precision and system scalability."
+            Weaving complex logic into high-performance digital experiences.
+            Focused on the intersection of aesthetic precision and system scalability.
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-6 pt-6">
